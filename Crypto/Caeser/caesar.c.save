@@ -1,0 +1,18 @@
+#include <stdio.h>
+
+void doCaesar(char* plaintext, int offset);
+
+int main()
+{
+	int caesarOffset = -3;
+	char plaintext[100] = "Wkh#txlfn#eurzq#ir{#mxpshg#ryh";
+
+	doCaesar(&plaintext[0], caesarOffset);
+
+	printf("\n");
+}
+
+void doCaesar(char* plaintext, int offset)
+{
+	printf("%s",plaintext);
+}

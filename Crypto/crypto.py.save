@@ -1,0 +1,35 @@
+#Basic premise is to start with a mac address
+
+mac = ''
+f = open('mac_add.txt')
+mac = f.readline().strip()
+f.close()
+
+#define encryption function
+def encrypt(elem, mac):
+	hash = ''
+
+	for part in mac:
+		hash = elem + part
+
+	return hash
+
+def decrypt(elem, mac):
+	plain = ''
+
+	#mac may need reversing here?
+	for part in mac:
+		plain = elem - part
+
+	return plain
+
+def main():
+
+	plaintext = open('message.txt')
+	ciphertext = open('cipher.txt')
+
+	for line in f:
+		for char in line:
+			#then for each element of the MAC address, perform hash on character
+			for elem in mac:
+				f.write(

@@ -1,0 +1,112 @@
+#include <stdio.h>
+
+void printTable(short* table);
+void underpopulationRule(short* table);
+void stayAliveRule(short* table);
+void overcrowdingRule(short* table);
+void reproductionRule(short* table);
+short countNeighbours(short* ref);
+
+#define SIZE 20
+
+int main()
+{
+	// Initialise the table
+	short table[SIZE][SIZE];
+
+	// Create pointer array. Each element is a pointer to the first element in each row
+	short* rowStarts[SIZE];
+
+	for(int i=0; i<SIZE; i++)
+	{
+		rowStarts[i] = &table[i][0];
+
+		for(int j=0; j<SIZE; j++)
+		{
+			table[i][j] = 0;
+		}
+	}
+
+	// First plant the seed, in this case a Block
+	table[5][5] = 1;
+	table[5][6] = 1;
+	table[6][5] = 1;
+	table[6][6] = 1;
+
+	// Now for the main loop. First print, then apply the GOL rules
+	for(int i=0; i<2; i++)
+	{
+		printTable(&table[0][0]);
+
+		// Apply the Game of Life rules
+
+		// Iterate over each row
+		for(int i=0; i<SIZE; i++)
+		{
+			// And over each element in that row
+			for(int j=0; j<SIZE; j++)
+			{
+				// Process 'live' rules, i.e. those which apply to live cells
+				if(table[i][j] == 1)
+				{
+					// 1: Underpopulation rule
+					if(countNeighbours(&table[i][j]) < 2)
+					{
+						table[i][j] = 0;
+					}
+
+					// 2: Stay-alive rule
+					if(countNeighbours(&table[i][j]) == 2 || countNeighbours(&table[i][j]) == 3)
+					{
+						table[i][j] = 1; // DON'T THINK WE NEED THIS
+					}
+
+					// 3: Overcrowding rule
+					if(countNeighbours(&table[i][j]) > 3)
+					{
+						table[i][j] = 0;
+					}
+				}
+				// Process 'dead' rules
+				else
+				{
+					// 4: Reproduction rule
+					if(countNeighbours(&table[i][j]) == 3)
+					{
+						table[i][j] = 1;
+					}
+				}
+			}
+		}
+
+		printf("\n\n");
+	}
+}
+
+/* This counts the number of live neighbours a given cell has, defined by 
+the pointer 'ref'. This also requires the pointer 'start', which is the 
+top-most left-most element to decide the location of the element within the 
+larger grid */
+short countNeighbours(short* ref)
+{
+	return 2;
+}
+
+/* Due to the way these 2D arrays are held in memory, this iterates through 
+SIZE * SIZE addresses in memory, and carriage returns every time it is 
+divisible by SIZE, hence forming the grid.*/
+void printTable(short* table)
+{
+	for(int i=0; i<SIZE*SIZE; i++)
+	{
+		// Carriage return at end of row if necessary
+		if(i % SIZE == 0)
+		{
+			printf("\n");
+		}
+
+		// Print array element
+		printf("%d ",*(table + i));
+
+	}
+}
